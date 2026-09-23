@@ -40,10 +40,16 @@ jobs:
       # - name: Install Chromium and Linux dependencies
       #   run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: npx playwright test
-        env:
-          CI: true
+      # - name: Run Playwright tests
+      #   run: npx playwright test
+      #   env:
+      #     CI: true
+
+      - name: Build Docker Image
+        run: sudo docker build -t playwright-training .
+
+      - name: Run Playwright Tests in Docker
+        run: sudo docker run --rm playwright-training
 
       - name: Upload Playwright HTML report
         if: ${{ !cancelled() }}
