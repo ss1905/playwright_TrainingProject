@@ -37,8 +37,8 @@ jobs:
       - name: Install project dependencies
         run: npm ci
 
-      - name: Install Chromium and Linux dependencies
-        run: npx playwright install --with-deps chromium
+      # - name: Install Chromium and Linux dependencies
+      #   run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: npx playwright test
