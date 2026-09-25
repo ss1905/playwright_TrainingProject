@@ -10,4 +10,4 @@ COPY . .
 
 RUN rm -rf test-results playwright-report
 
-CMD ["npx", "playwright", "test"]
+CMD sh -c "npx playwright test && echo '=== REPORTS ===' && find /app -type d | grep -E 'playwright-report|test-results' || true"

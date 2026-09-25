@@ -42,11 +42,20 @@ jobs:
 
       - name: Run Playwright Tests in Docker
         run: |
-          mkdir -p artifacts
+          docker rm -f playwright-test || true
 
-          docker run --rm \
-          -v ${{ github.workspace }}/artifacts:/artifacts \
-          playwright-training:${{ github.sha }}
+          docker create --name playwright-test \
+            playwright-training:${{ github.sha }}
+
+          docker start -a playwright-test
+
+      - name: Copy reports from container
+        if: always()
+        run: |
+          rm -rf playwright-report test-results
+
+          docker cp playwright-test:/app/playwright-report ./playwright-report || true
+          docker cp playwright-test:/app/test-results ./test-results || true
 
       - name: Inspect container output
         run: |
@@ -57,6 +66,11 @@ jobs:
         if: always()
         run: |
           sudo chown -R $(id -un):$(id -gn) playwright-report test-results || true
+
+      - name: Remove container
+        if: always()
+        run: |
+          docker rm -f playwright-test || true
 
       - name: Verify generated reports
         if: ${{ !cancelled() }}
