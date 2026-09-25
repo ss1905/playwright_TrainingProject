@@ -46,10 +46,22 @@ jobs:
       #     CI: true
 
       - name: Build Docker Image
-        run: sudo docker build -t playwright-training .
+        run: sudo docker build -t playwright-training:${{ github.sha }} .
 
       - name: Run Playwright Tests in Docker
-        run: sudo docker run --rm playwright-training
+        run: |
+          sudo docker run --rm \
+            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
+            -v ${{ github.workspace }}/test-results:/app/test-results \
+            playwright-training
+
+      - name: Verify generated reports
+        run: |
+          echo "=== Playwright Report ==="
+          ls -la playwright-report || true
+           
+          echo "=== Test Results ==="
+          ls -la test-results || true
 
       - name: Upload Playwright HTML report
         if: ${{ !cancelled() }}
@@ -67,4 +79,4 @@ jobs:
           name: test-results-${{ github.run_number }}
           path: test-results/
           retention-days: 30
-          if-no-files-found: ignore
+          if-no-files-found: warn
