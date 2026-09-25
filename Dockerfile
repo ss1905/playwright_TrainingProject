@@ -8,4 +8,6 @@ RUN npm ci
 
 COPY . .
 
+RUN rm -rf test-results playwright-report
+
 CMD ["npx", "playwright", "test"]
