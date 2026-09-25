@@ -43,8 +43,6 @@ jobs:
       - name: Run Playwright Tests in Docker
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
-            -v ${{ github.workspace }}/test-results:/app/test-results \
             playwright-training:${{ github.sha }}
       - name: Fix report ownership
         if: always()
