@@ -51,6 +51,7 @@ jobs:
       - name: Run Playwright Tests in Docker
         run: |
           sudo docker run --rm \
+          --user $(id -u):$(id -g) \
           -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
           -v ${{ github.workspace }}/test-results:/app/test-results \
           playwright-training
