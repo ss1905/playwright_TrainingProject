@@ -25,6 +25,12 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      - name: Environment Check
+        run: |
+          whoami
+          groups
+          docker --version
+          docker ps
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -46,11 +52,11 @@ jobs:
       #     CI: true
 
       - name: Build Docker Image
-        run: sudo docker build -t playwright-training .
+        run: docker build -t playwright-training .
 
       - name: Run Playwright Tests in Docker
         run: |
-          sudo docker run --rm \
+          docker run --rm \
           --user $(id -u):$(id -g) \
           -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
           -v ${{ github.workspace }}/test-results:/app/test-results \
