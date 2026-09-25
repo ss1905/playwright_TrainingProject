@@ -42,8 +42,17 @@ jobs:
 
       - name: Run Playwright Tests in Docker
         run: |
+          mkdir -p artifacts
+
           docker run --rm \
-            playwright-training:${{ github.sha }}
+          -v ${{ github.workspace }}/artifacts:/artifacts \
+          playwright-training:${{ github.sha }}
+
+      - name: Inspect container output
+        run: |
+          docker run --rm playwright-training:${{ github.sha }} \
+            sh -c "find /app -type d | sort"
+      
       - name: Fix report ownership
         if: always()
         run: |
